@@ -150,6 +150,16 @@ public final class DynamicNotch<Expanded, CompactLeading, CompactTrailing>: Obse
             let performer = NSHapticFeedbackManager.defaultPerformer
             performer.perform(.alignment, performanceTime: .default)
         }
+
+        // === PATCH START ===
+        if hoverBehavior.contains(.all) {
+            if hovering, state == .compact {
+                Task { await self.expand() }
+            } else if !hovering, state == .expanded {
+                Task { await self.compact() }
+            }
+        }
+        // === PATCH END ===
     }
 }
 
